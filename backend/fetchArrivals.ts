@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 import APIKEY from "./apiKey";
 import { parseISO, differenceInMinutes } from "date-fns";
 
-type busData = {
+interface busData {
     id: string,
     operationType: number,
     vehicleId: string,
@@ -32,7 +32,7 @@ type busData = {
     }
 }
 
-function processBusData(busData: busData[]) {
+function processIncomingBusData(busData: busData[]) {
     const extractedBusData = busData.map((busData) => {
         const { lineId, destinationName, expectedArrival } = busData
         const minutesToArrival = differenceInMinutes(parseISO(expectedArrival), Date.now())
@@ -41,7 +41,7 @@ function processBusData(busData: busData[]) {
     extractedBusData.sort((a,b) => a.minutesToArrival - b.minutesToArrival)
     return extractedBusData.map((busData) => {
         const minutesToArrivalString = busData.minutesToArrival.toFixed(0)
-        const displayedMinutesToArrival = minutesToArrivalString === "0" ? "Now" : `${minutesToArrivalString} minutes`
+        const displayedMinutesToArrival = minutesToArrivalString === "0" ? "Now" : `${minutesToArrivalString} minutes away`
         return `Bus #${busData.lineId} to ${busData.destinationName} - ${displayedMinutesToArrival}`
     })   
 }
@@ -49,12 +49,13 @@ function processBusData(busData: busData[]) {
 export async function getArrivalsFromAPI(stopCode: string) {
     try {
         const url = `https://api.tfl.gov.uk/StopPoint/${stopCode}/Arrivals?app_key=${APIKEY}`
-        const response = await axios.get(url)
-        const data = response.data.slice(0,5)
-        const responseArray: string[] = processBusData(data)
+        const response: AxiosResponse = await axios.get(url)
+        const data: busData[] = response.data as busData[]
+        console.log(url)
+        const firstFiveBuses: busData[] = data.slice(0,5)
+        const responseArray: string[] = processIncomingBusData(firstFiveBuses)
         return responseArray
     } catch (error) {
-        console.error(error)
         const errorResponse: string[] = ["Stop code not found"]
         return errorResponse
     }
