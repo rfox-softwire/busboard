@@ -4,10 +4,6 @@ import { type UnprocessedBusStopData } from "../types/UnprocessedBusStopData.ts"
 
 const APIKEY = process.env.TFL_API_KEY ?? ""
 
-interface DataType {
-    stopPoints: UnprocessedBusStopData[]
-}
-
 export interface busData {
     id: string,
     operationType: number,
@@ -53,7 +49,7 @@ export async function getArrivalsData(stopCode: string): Promise<busData[]> {
 export async function getStopsDataFromCoordinates(longitude: number,latitude: number): Promise<UnprocessedBusStopData[]> {
     try {
         const url = `https://api.tfl.gov.uk/StopPoint/?lat=${latitude.toString()}&lon=${longitude.toString()}&stopTypes=NaptanPublicBusCoachTram&modes=bus&app_key=${APIKEY}`
-        const response = await axios.get<DataType>(url)
+        const response = await axios.get<{stopPoints: UnprocessedBusStopData[]}>(url)
         const data = response.data.stopPoints
         return data
     } catch (error) {
