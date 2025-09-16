@@ -1,36 +1,37 @@
-import {type processedBusStopData } from "../backend/fetchBusStops.js"
+import { type ProcessedBusStopData } from "../types/ProcessedBusStopData.ts"
 
 interface propsType {
-    stopCodeList: processedBusStopData[],
-    onSelection: any
+    stopCodeList: ProcessedBusStopData[],
+    onSelection: React.ChangeEventHandler<HTMLInputElement>
 }
 
-function BusStopList({stopCodeList, onSelection}: propsType) {
-    if (stopCodeList[0].id === "") {
-        return (
-            <p>No stops found - please enter valid postcode</p>
-        )
-    }
+function BusStopList({ stopCodeList, onSelection }: propsType) {
+    const noStopsFound: boolean = stopCodeList[0].id === null
     return (
-    <div>
-        <p>Nearest bus stops - please select:</p>
-        {stopCodeList.map((busStop: processedBusStopData, index: number) => {
-            return (
-                <div key={"stop-"+index}>
-                    <label>
-                        <input
-                            type="radio"
-                            name="busStops"
-                            value={busStop.id}
-                            onChange = {onSelection}
-                        />
-                        {busStop.name}
-                    </label>
+        <div>
+            {noStopsFound && <p>No stops found - please enter valid postcode</p>}
+            {!noStopsFound &&
+                <div>
+                    <p>Nearest bus stops - please select:</p>
+                    {stopCodeList.map((busStop: ProcessedBusStopData, index: number) => {
+                        return (
+                            <div key={"stop-"+index.toString()}>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="busStops"
+                                        value={busStop.id ?? undefined}
+                                        onChange = {onSelection}
+                                    />
+                                    {busStop.name}
+                                </label>
+                            </div>
+                        )
+                    })
+                    }
                 </div>
-            )
-        })
-        }
-    </div>
+            }
+        </div>
     )
 }
 

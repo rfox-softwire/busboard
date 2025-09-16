@@ -1,24 +1,18 @@
-import axios, { type AxiosResponse } from "axios";
-import APIKEY from "./apiKey";
-import { getCoordsFromPostCode } from "../backend/fetchCoordinates.js"
+import "@dotenvx/dotenvx/config"
+import { getCoordinatesFromPostCode } from "./postCodeService.js"
+import { getStopsDataFromCoordinates } from "./tflApiService.ts"
+import { type CoordinateData } from "../types/CoordinateData.ts"
+import { type ProcessedBusStopData } from "../types/ProcessedBusStopData.ts"
+import { type UnprocessedBusStopData } from "../types/UnprocessedBusStopData.ts"
 
-export interface processedBusStopData {
-    id: string,
-    name: string
-}
 
-interface coordinateData {
-    latitude: number,
-    longitude: number
-}
 
-export async function getBusStopsNearPostCode(postCode: string) {
+export async function getBusStopsNearPostCode(postCode: string): Promise<ProcessedBusStopData[]> {
     try {
-        const coordinateData: coordinateData = await getCoordsFromPostCode(postCode)
-        const url = `https://api.tfl.gov.uk/StopPoint/?lat=${coordinateData.latitude}&lon=${coordinateData.longitude}&stopTypes=NaptanPublicBusCoachTram&modes=bus&app_key=${APIKEY}`
-        const response: AxiosResponse = await axios.get(url)
-        const data = response.data.stopPoints.slice(0,2)
-        const busStopArray = data.map((busStop: any) => {
+        const { longitude, latitude }: CoordinateData = await getCoordinatesFromPostCode(postCode)
+        const data = await getStopsDataFromCoordinates(longitude,latitude)
+        const nearestTwoStops = data.slice(0,2)
+        const busStopArray = nearestTwoStops.map((busStop: UnprocessedBusStopData) => {
             const { naptanId, commonName } = busStop
             return {
                 id: naptanId,
@@ -27,10 +21,7 @@ export async function getBusStopsNearPostCode(postCode: string) {
         })
         return busStopArray
     } catch (error) {
-        const errorResponse: processedBusStopData[] = [{
-            id: "",
-            name: "No stops found - please enter valid postcode"
-        }]
-        return errorResponse
+        console.error(error)
+        throw error
     }
 }

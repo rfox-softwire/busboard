@@ -1,42 +1,11 @@
-import axios, { type AxiosResponse } from "axios";
-import APIKEY from "./apiKey";
 import { parseISO, differenceInMinutes } from "date-fns";
-
-interface busData {
-    id: string,
-    operationType: number,
-    vehicleId: string,
-    naptanId: string,
-    stationName: string,
-    lineId: string,
-    lineName: string,
-    platformName: string,
-    direction: string,
-    bearing: string,
-    destinationNaptanId: string,
-    destinationName: string,
-    timestamp: string,
-    timeToStation: number,
-    currentLocation: string,
-    towards: string,
-    expectedArrival: string,
-    timeToLive: string,
-    modeName: string,
-    timing: {
-        countdownServerAdjustment: string,
-        source: string,
-        insert: string,
-        read: string,
-        sent: string,
-        received: string
-    }
-}
+import { getArrivalsData, type busData } from "./tflApiService.ts"
 
 function processIncomingBusData(busData: busData[]) {
     const extractedBusData = busData.map((busData) => {
         const { lineId, destinationName, expectedArrival } = busData
         const minutesToArrival = differenceInMinutes(parseISO(expectedArrival), Date.now())
-        return {lineId, destinationName, minutesToArrival}
+        return { lineId, destinationName, minutesToArrival }
     })
     extractedBusData.sort((a,b) => a.minutesToArrival - b.minutesToArrival)
     return extractedBusData.map((busData) => {
@@ -46,17 +15,14 @@ function processIncomingBusData(busData: busData[]) {
     })   
 }
 
-export async function getArrivalsFromAPI(stopCode: string) {
+export async function getFirstFiveArrivals(stopCode: string): Promise<string[]> {
     try {
-        const url = `https://api.tfl.gov.uk/StopPoint/${stopCode}/Arrivals?app_key=${APIKEY}`
-        const response: AxiosResponse = await axios.get(url)
-        const data: busData[] = response.data as busData[]
-        console.log(url)
+        const data: busData[] = await getArrivalsData(stopCode)
         const firstFiveBuses: busData[] = data.slice(0,5)
         const responseArray: string[] = processIncomingBusData(firstFiveBuses)
         return responseArray
     } catch (error) {
-        const errorResponse: string[] = ["Stop code not found"]
-        return errorResponse
+        console.error(error)
+        throw error
     }
 }

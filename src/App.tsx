@@ -1,32 +1,45 @@
-import { useState } from "react"
-import { getArrivalsFromAPI } from "../backend/fetchArrivals.js"
-import { getBusStopsNearPostCode, type processedBusStopData } from "../backend/fetchBusStops.js"
+import { useState, type ChangeEvent } from "react"
+import { getFirstFiveArrivals } from "../backend/fetchArrivals.js"
+import { getBusStopsNearPostCode, } from "../backend/fetchBusStops.js"
+import { type ProcessedBusStopData } from "../types/ProcessedBusStopData.ts"
 import BusStopList from "./BusStopList.js" 
 
-function App() {
-  const [arrivalsData, setArrivalsData] = useState([""])
-  const [postCodeData, setPostCodeData] = useState("")
-  const [stopCodeData, setStopCodeData] = useState("")
-  const [stopCodeList, setStopCodeList] = useState([{
-    id: "",
+const initialStopCodeListState = [{
+    id: null,
     name: "No stops found - please enter valid postcode"
-  }])
+  }] as ProcessedBusStopData[]
+
+function App() {
+  const [arrivalsData, setArrivalsData] = useState<string[]>([""])
+  const [postCodeString, setPostCodeString] = useState<string>("")
+  const [stopCodeString, setStopCodeString] = useState<string>("")
+  const [stopCodeList, setStopCodeList] = useState<ProcessedBusStopData[]>(initialStopCodeListState)
 
   async function getArrivalsData(stopCode: string) {
-    const response = await getArrivalsFromAPI(stopCode)
-    setArrivalsData(response)
+    try {
+      const response = await getFirstFiveArrivals(stopCode)
+      setArrivalsData(response)
+    } catch (error) {
+      setArrivalsData(["Error: No buses for stop found"])
+      throw error
+    }
   }
 
-  async function postCodeChange(postCode: string) {
-    setPostCodeData(postCode)
-    const stopArray: processedBusStopData[] = await getBusStopsNearPostCode(postCode) as processedBusStopData[]
-    setStopCodeList(stopArray)
+  async function handlePostCodeChange(postCode: string) {
+    try {
+      setPostCodeString(postCode)
+      const stopArray: ProcessedBusStopData[] = await getBusStopsNearPostCode(postCode)
+      setStopCodeList(stopArray)
+    } catch (error) {
+      setStopCodeList(initialStopCodeListState)
+      throw error
+    }
   }
 
-  function handleChangeSelectedStop(e: Event) {
+  function handleChangeSelectedStop(e: ChangeEvent<HTMLInputElement>) {
     const selectedStop = e.target.value
     if (selectedStop) {
-      setStopCodeData(selectedStop)
+      setStopCodeString(selectedStop)
     }
   }
   
@@ -37,12 +50,17 @@ function App() {
         
         <label>
           Enter post code:
-          <br/>
-          <input
-            value = {postCodeData}
-            onChange = {e => postCodeChange(e.target.value)}
-          />
         </label>
+        <br/>
+        <input
+          value = {postCodeString}
+          onChange = {(e) => {
+            void (async () => {
+              await handlePostCodeChange(e.target.value)
+            })()
+          }}
+        />
+        
         <br/>
         <br/>
         
@@ -53,7 +71,11 @@ function App() {
         <br/>
                
         <button
-          onClick = {() => getArrivalsData(stopCodeData)}
+          onClick = {() => {
+            void (async () => {
+              await getArrivalsData(stopCodeString)
+            })()
+          }}
           type = "button">Click to get arrivals
         </button>
         <br/>
@@ -61,7 +83,7 @@ function App() {
 
         <ol>
           {arrivalsData.map((busData, index) => {
-            return <li key = {"bus-"+index}>{busData}</li>
+            return <li key = {"bus-"+index.toString()}>{busData}</li>
           })}
         </ol>
       </div>
