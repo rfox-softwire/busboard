@@ -9,7 +9,8 @@ import reactDom from 'eslint-plugin-react-dom'
 export default tseslint.config(
   { ignores: ['dist'] },
   {
-    extends: [js.configs.recommended, 
+    extends: [
+      js.configs.recommended, 
       ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked
     ],
@@ -36,6 +37,7 @@ export default tseslint.config(
       ],
       ...reactX.configs['recommended-typescript'].rules,
       ...reactDom.configs.recommended.rules,
+      'object-curly-spacing': ['error', 'always'],
     },
   },
 )
