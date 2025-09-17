@@ -16,7 +16,7 @@ function LiveBusData() {
     const dataNotFoundMessage = "Data not found";
     
     if (dataLoading) {
-            (async () => {
+            void (async () => {
                 try {
                     const fetchedNumberBusStops = await getNumberBusStops()
                     setNumberBusStopsString(fetchedNumberBusStops)
@@ -28,7 +28,7 @@ function LiveBusData() {
 
                 try {
                     const fetchedNumberBusRoutes = await getNumberBusRoutes()
-                    setNumberBusRoutesString(fetchedNumberBusRoutes)
+                    setNumberBusRoutesString(fetchedNumberBusRoutes.toString())
                 } catch (error) {
                     console.error(error)
                     setNumberBusRoutesString(dataNotFoundMessage)
@@ -65,10 +65,10 @@ function LiveBusData() {
             
             {dataLoading && <p>Loading - please wait</p>}
             {!dataLoading && <table className="mw-4/5 m-1">
-                <thead className="border-b-2 border-gray-400">
+                <thead className="text-left border-b-2 border-gray-400">
                     <tr>
-                        <th>Metric</th>
-                        <th className="border-l border-gray-300">Statistic</th>
+                        <th className="align-text-top p-1">Metric</th>
+                        <th className="align-text-top p-1 border-l border-gray-300">Statistic</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,7 +88,7 @@ function LiveBusData() {
                         <td className = "align-text-top p-1">Number of buses by type</td>
                         <td className = "align-text-top p-1 pl-5 border-l border-gray-300">
                             <ul className="list-disc">
-                                {numberBusTypeArray.map((busTypeString) => <li>{busTypeString}</li>)}
+                                {numberBusTypeArray.map((busTypeString,index) => <li key = {"type-"+index.toString()}>{busTypeString}</li>)}
                             </ul>
                         </td>
                     </tr>

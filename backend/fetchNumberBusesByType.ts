@@ -1,6 +1,10 @@
 import { getBusTypeData } from "./londonDatastoreService"
 
 interface BusTypeObject {
+    bus_type: string,
+    drive_train_type: string,
+    year: string,
+    number_of_buses: string,
     [key: string]: string
 }
 
@@ -16,25 +20,31 @@ export async function getLatestNumberBusesByType() {
         const csvSplit = data.split("\r\n")
         const headers: string[] = csvSplit[0].split(",")
         const csvData = csvSplit.slice(1-csvSplit.length)
-        const busTypeDataArray = csvData.map((row: string) => {
+        const busTypeDataArray = csvData.map((row: string): BusTypeObject => {
             const rowSplit = row.split(",")
             while (rowSplit.length > headers.length) {
-                rowSplit[rowSplit.length-2] += rowSplit.pop()
+                const finalValue = rowSplit.pop()
+                if (finalValue) rowSplit[rowSplit.length-2] += finalValue.toString()
             }
-            const dataObjectElement: BusTypeObject = {}
+            const dataObjectElement: BusTypeObject = {
+                bus_type: "",
+                drive_train_type: "",
+                year: "",
+                number_of_buses: ""
+            }
             headers.forEach((cur: string, idx: number) => {
-                dataObjectElement[cur] = rowSplit[idx]
+                if (cur in dataObjectElement) dataObjectElement[cur] = rowSplit[idx]
             })
             return dataObjectElement
         })
         let latestElement = busTypeDataArray.slice(-1)[0]
-        while (latestElement.year === undefined) {
+        while (!latestElement.year) {
             busTypeDataArray.pop()
             latestElement = busTypeDataArray.slice(-1)[0]
         }
         const latestYear = latestElement.year
-        const busTypeDataArrayLatestYearFiltered = busTypeDataArray.filter((element: any) => element.year === latestYear && element.number_of_buses !== "-")
-        const busTypeStringArray = busTypeDataArrayLatestYearFiltered.map((element: any) => {
+        const busTypeDataArrayLatestYearFiltered = busTypeDataArray.filter((element: BusTypeObject) => element.year === latestYear && element.number_of_buses !== "-")
+        const busTypeStringArray = busTypeDataArrayLatestYearFiltered.map((element: BusTypeObject) => {
             const busType = parseTextIntoString(element.bus_type)
             const busSubType = parseTextIntoString(element.drive_train_type).replace("nrm", "New Routemaster")
             const numberBusesString = element.number_of_buses.split('"').join("")

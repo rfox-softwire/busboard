@@ -25,7 +25,7 @@ function TFLOrigins() {
     const [displayedOriginsData, setDisplayedOriginsData] = useState<DisplayedOriginsDataType>(initialDisplayedOriginsData);
 
     if (dataLoading) {
-        (async () => {
+        void (async () => {
             const fetchedData = await getOriginsData()
             setOriginsData(fetchedData)
             setDataLoading(false)
@@ -66,11 +66,13 @@ function TFLOrigins() {
                         <p className="text-xs mx-3 mb-2 text-right">Source: {displayedOriginsData.source}</p>
                         <div className="text-center">
                             {originsPageNumber > 0 && <button
+                                type="button"
                                 className="mb-3 mx-1 py-0.5 px-2 bg-cyan-600 hover:bg-cyan-900 rounded-lg text-white"
                                 onClick={previousPage}>
                                     Previous
                                 </button>}
                             {originsPageNumber < originsData.length - 1 && <button
+                                type="button"
                                 className="mb-3 mx-1 py-0.5 px-2 bg-cyan-600 hover:bg-cyan-900 rounded-lg text-white"
                                 onClick={nextPage}>
                                     Next

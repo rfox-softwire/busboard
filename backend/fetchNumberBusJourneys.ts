@@ -1,8 +1,6 @@
 import { getJourneyCountData } from "./londonDatastoreService"
 
-interface BusJourneysObject {
-    [key: string]: string
-}
+type BusJourneysObject = Record<string, string>;
 
 export async function getLatestNumberBusJourneys() {
     try {
