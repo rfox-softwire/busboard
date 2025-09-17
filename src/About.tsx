@@ -1,21 +1,12 @@
-import TFLOrigins from "./TFLOrigins"
+import TFLOrigins from "./TFLOrigins.tsx"
+import LiveBusData from "./LiveBusData.tsx"
 
 function About() {
     return (
         <div>
             <h1>Buses</h1>
-            
             <TFLOrigins />
-
-            <section>
-                <h2>The bus</h2>
-
-            </section>
-
-            <section>
-                <h2>Bus statistics</h2>
-
-            </section>
+            <LiveBusData />
         </div>
     )
 }

@@ -57,3 +57,27 @@ export async function getStopsDataFromCoordinates(longitude: number,latitude: nu
         throw error
     }
 }
+
+export async function getNumberBusStops() {
+    try {
+        const url = `https://api.tfl.gov.uk/StopPoint/Mode/bus?page=1&app_key=${APIKEY}`
+        const response = await axios.get(url)
+        const numberStops = response.data.total
+        return numberStops
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export async function getNumberBusRoutes() {
+    try {
+        const url = `https://api.tfl.gov.uk/Line/Mode/bus?app_key=${APIKEY}`
+        const response = await axios.get(url)
+        const numberRoutes = response.data.length
+        return numberRoutes
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
