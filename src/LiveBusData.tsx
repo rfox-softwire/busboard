@@ -61,10 +61,11 @@ function LiveBusData() {
 
     return (
         <section>
-            <h2>Live bus data</h2>
+            <h2 className="text-xl font-bold text-cyan-600 my-2">Live bus data</h2>
+            
             {dataLoading && <p>Loading - please wait</p>}
-            {!dataLoading && <table>
-                <thead>
+            {!dataLoading && <table className="mw-4/5 m-1 align-top py-1">
+                <thead className="border-b border-gray-400">
                     <tr>
                         <th>Metric</th>
                         <th>Statistic</th>
@@ -86,7 +87,7 @@ function LiveBusData() {
                     <tr>
                         <td>Number of buses by type</td>
                         <td>
-                            <ul>
+                            <ul className="list-disc">
                                 {numberBusTypeArray.map((busTypeString) => <li>{busTypeString}</li>)}
                             </ul>
                         </td>

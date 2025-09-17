@@ -8,9 +8,19 @@ import About from './About.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/about">About buses</Link>
+      <nav className="border-b-2 border-gray-200">
+        <ul>
+          <li className="inline m-2 p-2 hover:text-cyan-700 ">
+            <Link to="/">Busboard</Link>
+          </li>
+          <li className="inline m-2 p-2 hover:text-cyan-700">
+            <Link to="/about">About buses</Link>
+          </li>
+        </ul>
+        
+        
+
+        
       </nav>
 
       <Routes>

@@ -44,15 +44,15 @@ function App() {
   }
   
   return (
-      <div>
-        <h1 className="text-3xl font-bold underline text-center text-cyan-600 m-4"
+      <div className="mx-2">
+        <h1 className="text-3xl font-bold text-center text-cyan-600 m-4"
         >BusBoard</h1>
         
         <label>
           Enter post code:
         </label>
-        <br/>
         <input
+          className="ml-2 px-1 py-0.5 border border-cyan-600 rounded-lg"
           value = {postCodeString}
           onChange = {(e) => {
             void (async () => {
@@ -61,16 +61,13 @@ function App() {
           }}
         />
         
-        <br/>
-        <br/>
-        
         <BusStopList
           stopCodeList = {stopCodeList}
           onSelection = {handleChangeSelectedStop}
         />
-        <br/>
-               
+
         <button
+          className="my-3 py-1 px-2 bg-cyan-600 hover:bg-cyan-900 rounded-lg text-white font-bold"
           onClick = {() => {
             void (async () => {
               await getArrivalsData(stopCodeString)
@@ -78,12 +75,13 @@ function App() {
           }}
           type = "button">Click to get arrivals
         </button>
-        <br/>
-        <br/>
-
-        <ol>
+        
+        {arrivalsData[0] && <p className="font-bold">Upcoming buses</p>}
+        <ol className="list-decimal ml-5">
           {arrivalsData.map((busData, index) => {
-            return <li key = {"bus-"+index.toString()}>{busData}</li>
+            if (busData) return <li key = {"bus-"+index.toString()}>
+              {busData}
+            </li>
           })}
         </ol>
       </div>

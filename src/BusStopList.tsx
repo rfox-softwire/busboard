@@ -8,11 +8,11 @@ interface propsType {
 function BusStopList({ stopCodeList, onSelection }: propsType) {
     const noStopsFound: boolean = stopCodeList[0].id === null
     return (
-        <div>
-            {noStopsFound && <p>No stops found - please enter valid postcode</p>}
+        <div className="pt-2">
+            {noStopsFound && <p className="text-red-500">No stops found - please enter valid postcode</p>}
             {!noStopsFound &&
                 <div>
-                    <p>Nearest bus stops - please select:</p>
+                    <p className="font-bold">Nearest bus stops - please select:</p>
                     {stopCodeList.map((busStop: ProcessedBusStopData, index: number) => {
                         return (
                             <div key={"stop-"+index.toString()}>
@@ -23,7 +23,7 @@ function BusStopList({ stopCodeList, onSelection }: propsType) {
                                         value={busStop.id ?? undefined}
                                         onChange = {onSelection}
                                     />
-                                    {busStop.name}
+                                    <p className="inline pl-1">{busStop.name}</p>
                                 </label>
                             </div>
                         )
