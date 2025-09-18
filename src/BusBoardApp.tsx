@@ -9,7 +9,7 @@ const initialStopCodeListState = [{
     name: "No stops found - please enter valid postcode"
   }] as ProcessedBusStopData[]
 
-function App() {
+function BusBoardApp() {
   const [arrivalsData, setArrivalsData] = useState<string[]>([""])
   const [postCodeString, setPostCodeString] = useState<string>("")
   const [stopCodeString, setStopCodeString] = useState<string>("")
@@ -88,4 +88,4 @@ function App() {
   )
 }
 
-export default App
+export default BusBoardApp
