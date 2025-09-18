@@ -44,7 +44,7 @@ function BusBoardApp() {
   }
   
   return (
-      <body className="mx-2">
+      <main className="mx-2">
         <h1
           className="text-3xl font-bold text-center text-cyan-600 m-4">
             BusBoard
@@ -86,7 +86,7 @@ function BusBoardApp() {
             </li>
           })}
         </ol>
-      </body>
+      </main>
   )
 }
 
