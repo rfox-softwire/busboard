@@ -57,7 +57,7 @@ function LiveBusData() {
 
     return (
         <section>
-            <h2 className="text-xl font-bold text-cyan-600 my-2">Live bus data</h2>
+            <h2 className="text-xl font-bold text-cyan-600 my-2">Live London bus data</h2>
             
             {dataLoading && <p>Loading - please wait</p>}
             {!dataLoading && <table className="mw-4/5 m-1">
@@ -69,19 +69,19 @@ function LiveBusData() {
                 </thead>
                 <tbody>
                     <tr>
-                        <td className = "align-text-top p-1">Number of bus stops</td>
+                        <td className = "align-text-top p-1">Number of TFL bus stops</td>
                         <td className = "align-text-top p-1 border-l border-gray-300">{numberBusStopsString}</td>
                     </tr>
                     <tr className="border-t border-gray-300">
-                        <td className = "align-text-top p-1">Number of bus routes</td>
+                        <td className = "align-text-top p-1">Number of TFL bus routes</td>
                         <td className = "align-text-top p-1 border-l border-gray-300">{numberBusRoutesString}</td>
                     </tr>
                     <tr className="border-t border-gray-300">
-                        <td className = "align-text-top p-1">Number of bus journeys {periodBusJourneysString}</td>
+                        <td className = "align-text-top p-1">Number of bus journeys in London {periodBusJourneysString}</td>
                         <td className = "align-text-top p-1 border-l border-gray-300">{numberBusJourneysString}</td>
                     </tr>
                     <tr className="border-t border-gray-300">
-                        <td className = "align-text-top p-1">Number of buses by type</td>
+                        <td className = "align-text-top p-1">Number of TFL buses by type</td>
                         <td className = "align-text-top p-1 pl-5 border-l border-gray-300">
                             <ul className="list-disc">
                                 {numberBusTypeArray.map((busTypeString,index) => <li key = {"type-"+index.toString()}>{busTypeString}</li>)}

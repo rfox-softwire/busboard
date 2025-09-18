@@ -44,9 +44,11 @@ function BusBoardApp() {
   }
   
   return (
-      <div className="mx-2">
-        <h1 className="text-3xl font-bold text-center text-cyan-600 m-4"
-        >BusBoard</h1>
+      <body className="mx-2">
+        <h1
+          className="text-3xl font-bold text-center text-cyan-600 m-4">
+            BusBoard
+        </h1>
         
         <label>
           Enter post code:
@@ -84,7 +86,7 @@ function BusBoardApp() {
             </li>
           })}
         </ol>
-      </div>
+      </body>
   )
 }
 

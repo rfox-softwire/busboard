@@ -50,7 +50,7 @@ function TFLOrigins() {
                 <h2 className="text-xl font-bold text-cyan-600 my-2">Origins of TFL</h2>
                 {dataLoading && <p>Loading - please wait</p>}
                 {!dataLoading && 
-                    <div className="bg-gray-100">
+                    <article className="bg-gray-100">
                         <div className="flex">
                             <h3 className="flex-1 p-2 text-xl font-bold text-gray-700">{displayedOriginsData.year}</h3>
                             <p className="flex-4 p-2">{displayedOriginsData.text}</p>
@@ -78,9 +78,8 @@ function TFLOrigins() {
                                     Next
                                 </button>}
                         </div>
-                    </div>
+                    </article>
                 }
-
             </section>
     )
 }
