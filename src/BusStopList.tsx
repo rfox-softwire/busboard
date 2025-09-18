@@ -11,13 +11,13 @@ function BusStopList({ stopCodeList, onSelection }: propsType) {
         <section className="pt-2">
             {noStopsFound && <p className="text-red-500 pt-2">No stops found - please enter valid postcode</p>}
             {!noStopsFound && 
-                <div>
-                    <p className="font-bold">Nearest bus stops - please select:</p>
+                <section>
+                    <h3 className="font-bold">Nearest bus stops - please select:</h3>
                     <ol>
                     {stopCodeList.map((busStop: ProcessedBusStopData, index: number) => {
                         return (
-                            <li>
-                                <label key={"stop-"+index.toString()}>
+                            <li key={"stop-"+index.toString()}>
+                                <label>
                                     <input
                                         type="radio"
                                         name="busStops"
@@ -31,7 +31,7 @@ function BusStopList({ stopCodeList, onSelection }: propsType) {
                     })
                     }
                     </ol>
-                </div>
+                </section>
             }
         </section>
     )

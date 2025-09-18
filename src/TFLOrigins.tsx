@@ -51,7 +51,7 @@ function TFLOrigins() {
                 {dataLoading && <p>Loading - please wait</p>}
                 {!dataLoading && 
                     <article className="bg-gray-100">
-                        <div className="flex">
+                        <section className="flex">
                             <h3 className="flex-1 p-2 text-xl font-bold text-gray-700">{displayedOriginsData.year}</h3>
                             <p className="flex-4 p-2">{displayedOriginsData.text}</p>
                             <figure className="flex-4 p-2">
@@ -62,9 +62,9 @@ function TFLOrigins() {
                                     </a>
                                 </figcaption>
                             </figure>
-                        </div>
+                        </section>
                         <p className="text-xs mx-3 mb-2 text-right">Source: {displayedOriginsData.source}</p>
-                        <div className="text-center">
+                        <section className="text-center">
                             {originsPageNumber > 0 && <button
                                 type="button"
                                 className="mb-3 mx-1 py-0.5 px-2 bg-cyan-600 hover:bg-cyan-900 rounded-lg text-white"
@@ -77,7 +77,7 @@ function TFLOrigins() {
                                 onClick={nextPage}>
                                     Next
                                 </button>}
-                        </div>
+                        </section>
                     </article>
                 }
             </section>
