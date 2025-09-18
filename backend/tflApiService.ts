@@ -71,13 +71,8 @@ export async function getNumberBusStops(): Promise<string> {
 }
 
 export async function getNumberBusRoutes() {
-    try {
-        const url = `https://api.tfl.gov.uk/Line/Mode/bus?app_key=${APIKEY}`
-        const response = await axios.get<Record<string,string>[]>(url)
-        const numberRoutes = response.data.length
-        return numberRoutes
-    } catch (error) {
-        console.error(error)
-        throw error
-    }
+    const url = `https://api.tfl.gov.uk/Line/Mode/bus?app_key=${APIKEY}`
+    const response = await axios.get<Record<string,string>[]>(url)
+    const numberRoutes = response.data.length
+    return numberRoutes
 }

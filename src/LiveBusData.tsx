@@ -21,7 +21,6 @@ function LiveBusData() {
                     const fetchedNumberBusStops = await getNumberBusStops()
                     setNumberBusStopsString(fetchedNumberBusStops)
                 } catch (error) {
-                    console.error(error)
                     setNumberBusStopsString(dataNotFoundMessage)
                     throw error
                 }
@@ -30,7 +29,6 @@ function LiveBusData() {
                     const fetchedNumberBusRoutes = await getNumberBusRoutes()
                     setNumberBusRoutesString(fetchedNumberBusRoutes.toString())
                 } catch (error) {
-                    console.error(error)
                     setNumberBusRoutesString(dataNotFoundMessage)
                     throw error
                 }               
@@ -40,7 +38,6 @@ function LiveBusData() {
                     setNumberBusJourneysString(fetchNumberBusJourneys.numBusJourneys)
                     setPeriodBusJourneysString(fetchNumberBusJourneys.dataPeriod)
                 } catch (error) {
-                    console.error(error)
                     setNumberBusJourneysString(dataNotFoundMessage)
                     setPeriodBusJourneysString(dataNotFoundMessage)
                     throw error
@@ -50,7 +47,6 @@ function LiveBusData() {
                     const fetchNumberBusTypeArray = await getLatestNumberBusesByType()
                     setNumberBusTypeArray(fetchNumberBusTypeArray)
                 } catch (error) {
-                    console.error(error)
                     setNumberBusTypeArray([dataNotFoundMessage])
                     throw error
                 }              

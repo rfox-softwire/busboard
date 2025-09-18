@@ -17,10 +17,6 @@ createRoot(document.getElementById('root')!).render(
             <Link to="/about">About buses</Link>
           </li>
         </ul>
-        
-        
-
-        
       </nav>
 
       <Routes>

@@ -16,13 +16,8 @@ function processIncomingBusData(busData: busData[]) {
 }
 
 export async function getFirstFiveArrivals(stopCode: string): Promise<string[]> {
-    try {
-        const data: busData[] = await getArrivalsData(stopCode)
-        const firstFiveBuses: busData[] = data.slice(0,5)
-        const responseArray: string[] = processIncomingBusData(firstFiveBuses)
-        return responseArray
-    } catch (error) {
-        console.error(error)
-        throw error
-    }
+    const data: busData[] = await getArrivalsData(stopCode)
+    const firstFiveBuses: busData[] = data.slice(0,5)
+    const responseArray: string[] = processIncomingBusData(firstFiveBuses)
+    return responseArray
 }
