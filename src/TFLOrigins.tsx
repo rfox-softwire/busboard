@@ -55,7 +55,7 @@ function TFLOrigins() {
                             <h3 className="flex-1 p-2 text-xl font-bold text-gray-700">{displayedOriginsData.year}</h3>
                             <p className="flex-4 p-2">{displayedOriginsData.text}</p>
                             <figure className="flex-4 p-2">
-                                <img src={displayedOriginsData.imgSource} />
+                                {displayedOriginsData.imgSource && <img src={displayedOriginsData.imgSource} />}
                                 <figcaption className="text-sm">
                                     <a className="underline hover:no-underline" href = {displayedOriginsData.imgSource}>
                                         {displayedOriginsData.imgCaption}

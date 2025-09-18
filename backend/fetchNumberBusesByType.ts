@@ -24,7 +24,7 @@ export async function getLatestNumberBusesByType() {
             const rowSplit = row.split(",")
             while (rowSplit.length > headers.length) {
                 const finalValue = rowSplit.pop()
-                if (finalValue) rowSplit[rowSplit.length-2] += finalValue.toString()
+                if (finalValue) rowSplit[rowSplit.length-1] += finalValue.toString()
             }
             const dataObjectElement: BusTypeObject = {
                 bus_type: "",
@@ -57,5 +57,3 @@ export async function getLatestNumberBusesByType() {
         throw error
     }
 }
-
-console.log(await getLatestNumberBusesByType())
