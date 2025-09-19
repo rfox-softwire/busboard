@@ -1,24 +1,21 @@
-import { getJourneyCountData } from "./londonDatastoreService"
+import { getJourneyCountData } from "./londonDatastoreService";
+import Papa from "papaparse";
+import { type BusJourneysData } from "../types/BusJourneysData";
 
-type BusJourneysObject = Record<string, string>;
-
-export async function getLatestNumberBusJourneys() {
-    const data = await getJourneyCountData()
-    const csvSplit = data.split("\r\n")
-    const headers: string[] = csvSplit[0].split(",")
-    let latestData = csvSplit.pop()
-    while (!latestData) {
-        latestData = csvSplit.pop()
-    }
-    const latestDataSplit = latestData.split(",")
-    const latestDataObject: BusJourneysObject = {}
-    headers.forEach((cur: string, idx: number) => {
-        latestDataObject[cur] = latestDataSplit[idx]
-    })
-    const dataPeriod = `from ${latestDataObject["Period beginning"]} to ${latestDataObject["Period ending"]}`
-    const numBusJourneys = `${latestDataObject["Bus journeys (m)"]} million`
+export async function getLatestNumberBusJourneys(): Promise<BusJourneysData> {
+    const data = await getJourneyCountData();
+    const rows = Papa.parse(data, {
+            header: true,
+            skipEmptyLines: true
+         }).data as Record<string, string>[];
+    const latestData = rows.slice(-1)[0];
+    const dataPeriod = {
+        fromDate: latestData["Period beginning"],
+        toDate: latestData["Period ending"]
+    };
+    const numBusJourneys = `${latestData["Bus journeys (m)"]} million`;
     return {
+        numBusJourneys,
         dataPeriod,
-        numBusJourneys
-    }
+    };
 }

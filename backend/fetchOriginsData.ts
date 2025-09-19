@@ -7,8 +7,8 @@ interface OriginsData {
 }
 
 export async function getOriginsData(): Promise<OriginsData[]> {
-    const response = await fetch("../data/originsData.json")
-    const jsonData: OriginsData[] = await response.json() as OriginsData[]
-    return jsonData
+    const response = await fetch("../data/originsData.json");
+    const jsonData: OriginsData[] = await response.json() as OriginsData[];
+    return jsonData;
 }
     

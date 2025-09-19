@@ -1,4 +1,4 @@
-import { type ProcessedBusStopData } from "../types/ProcessedBusStopData.ts"
+import { type ProcessedBusStopData } from "../types/ProcessedBusStopData.ts";
 
 interface propsType {
     stopCodeList: ProcessedBusStopData[],
@@ -6,7 +6,7 @@ interface propsType {
 }
 
 function BusStopList({ stopCodeList, onSelection }: propsType) {
-    const noStopsFound: boolean = stopCodeList[0].id === null
+    const noStopsFound: boolean = stopCodeList.length === 0;
     return (
         <section className="pt-2">
             {noStopsFound && <p className="text-red-500 pt-2">No stops found - please enter valid postcode</p>}
@@ -17,24 +17,25 @@ function BusStopList({ stopCodeList, onSelection }: propsType) {
                     {stopCodeList.map((busStop: ProcessedBusStopData, index: number) => {
                         return (
                             <li key={"stop-"+index.toString()}>
-                                <label>
+                                <label className="inline">
                                     <input
                                         type="radio"
                                         name="busStops"
+                                        className="mx-1"
                                         value={busStop.id ?? undefined}
                                         onChange = {onSelection}
                                     />
-                                    <p className="inline pl-1">{busStop.name}</p>
+                                    {busStop.name}
                                 </label>
                             </li>
-                        )
+                        );
                     })
                     }
                     </ol>
                 </section>
             }
         </section>
-    )
+    );
 }
 
-export default BusStopList
+export default BusStopList;

@@ -1,9 +1,9 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
-import './index.css'
-import BusBoardApp from './BusBoardApp.tsx'
-import About from './About.tsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import './index.css';
+import BusBoardApp from './BusBoardApp.tsx';
+import About from './About.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -28,4 +28,4 @@ createRoot(document.getElementById('root')!).render(
 
     
   </StrictMode>,
-)
+);

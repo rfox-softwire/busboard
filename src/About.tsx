@@ -1,5 +1,5 @@
-import TFLOrigins from "./TFLOrigins.tsx"
-import LiveBusData from "./LiveBusData.tsx"
+import TFLOrigins from "./TFLOrigins.tsx";
+import LiveBusData from "./LiveBusData.tsx";
 
 function About() {
     return (
@@ -8,7 +8,7 @@ function About() {
             <TFLOrigins />
             <LiveBusData />
         </main>
-    )
+    );
 }
 
-export default About
+export default About;

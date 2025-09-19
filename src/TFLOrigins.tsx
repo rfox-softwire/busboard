@@ -1,13 +1,5 @@
-import { useEffect, useState } from "react"
-import { getOriginsData } from "../backend/fetchOriginsData"
-
-interface DisplayedOriginsDataType {
-    year: string,
-    text: string,
-    imgSource: string,
-    imgCaption: string,
-    source: string
-}
+import { useState } from "react";
+import { getOriginsData } from "../backend/fetchOriginsData";
 
 function TFLOrigins() {
 
@@ -17,32 +9,27 @@ function TFLOrigins() {
         imgSource: "",
         imgCaption: "",
         source: ""
-    }
+    };
 
-    const [dataLoading, setDataLoading] = useState(true) 
+    const [dataLoading, setDataLoading] = useState(true); 
     const [originsData, setOriginsData] = useState([initialDisplayedOriginsData]);
-    const [originsPageNumber, setOriginsPageNumber] = useState(0)
-    const [displayedOriginsData, setDisplayedOriginsData] = useState<DisplayedOriginsDataType>(initialDisplayedOriginsData);
+    const [originsPageNumber, setOriginsPageNumber] = useState(0);
+    
+    const displayedOriginsData = originsData[originsPageNumber];
 
     if (dataLoading) {
         void (async () => {
-            const fetchedData = await getOriginsData()
-            setOriginsData(fetchedData)
-            setDataLoading(false)
-        })()
-    }
-
-    useEffect(() => {
-        setDisplayedOriginsData(originsData[originsPageNumber])
-    }, [originsData, originsPageNumber])
-    
+            setOriginsData(await getOriginsData());
+            setDataLoading(false);
+        })();
+    }    
 
     function previousPage() {
-        setOriginsPageNumber(page => page - 1)
+        setOriginsPageNumber(page => page - 1);
     }
 
     function nextPage() {
-        setOriginsPageNumber(page => page + 1)
+        setOriginsPageNumber(page => page + 1);
     }
 
     return (
@@ -81,7 +68,7 @@ function TFLOrigins() {
                     </article>
                 }
             </section>
-    )
+    );
 }
 
-export default TFLOrigins
+export default TFLOrigins;

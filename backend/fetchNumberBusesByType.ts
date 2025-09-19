@@ -1,54 +1,34 @@
-import { getBusTypeData } from "./londonDatastoreService"
+import { getBusTypeData } from "./londonDatastoreService";
+import Papa from "papaparse";
 
 interface BusTypeObject {
     bus_type: string,
     drive_train_type: string,
     year: string,
-    number_of_buses: string,
-    [key: string]: string
+    number_of_buses: string
 }
 
-function parseTextIntoString(text: string): string {
-    const textReplacedUnderscores = text.split("_").join(" ")
-    const stringWithCapitalisedFirst = textReplacedUnderscores.charAt(0).toUpperCase() + textReplacedUnderscores.slice(1)
-    return stringWithCapitalisedFirst
+function replaceUnderscoresAndCapitalise(text: string): string {
+    const textReplacedUnderscores = text.split("_").join(" ");
+    const stringWithCapitalisedFirst = textReplacedUnderscores.charAt(0).toUpperCase() + textReplacedUnderscores.slice(1);
+    return stringWithCapitalisedFirst;
 }
 
 export async function getLatestNumberBusesByType() {
-    const data = await getBusTypeData()
-    const csvSplit = data.split("\r\n")
-    const headers: string[] = csvSplit[0].split(",")
-    const csvData = csvSplit.slice(1-csvSplit.length)
-    const busTypeDataArray = csvData.map((row: string): BusTypeObject => {
-        const rowSplit = row.split(",")
-        while (rowSplit.length > headers.length) {
-            const finalValue = rowSplit.pop()
-            if (finalValue) rowSplit[rowSplit.length-1] += finalValue.toString()
-        }
-        const dataObjectElement: BusTypeObject = {
-            bus_type: "",
-            drive_train_type: "",
-            year: "",
-            number_of_buses: ""
-        }
-        headers.forEach((cur: string, idx: number) => {
-            if (cur in dataObjectElement) dataObjectElement[cur] = rowSplit[idx]
-        })
-        return dataObjectElement
-    })
-    let latestElement = busTypeDataArray.slice(-1)[0]
-    while (!latestElement.year) {
-        busTypeDataArray.pop()
-        latestElement = busTypeDataArray.slice(-1)[0]
-    }
-    const latestYear = latestElement.year
-    const busTypeDataArrayLatestYearFiltered = busTypeDataArray.filter((element: BusTypeObject) => element.year === latestYear && element.number_of_buses !== "-")
-    const busTypeStringArray = busTypeDataArrayLatestYearFiltered.map((element: BusTypeObject) => {
-        const busType = parseTextIntoString(element.bus_type)
-        const busSubType = parseTextIntoString(element.drive_train_type).replace("nrm", "New Routemaster")
-        const numberBusesString = element.number_of_buses.split('"').join("")
-        const busCountString = numberBusesString === "1" ? "1 bus" : `${numberBusesString} buses`
-        return `${busType} - ${busSubType} - ${busCountString}`
-    })
-    return busTypeStringArray
+    const data = await getBusTypeData();
+    const rows = Papa.parse(data, {
+        header: true,
+        skipEmptyLines: true
+     }).data as BusTypeObject[];
+    const latestElement = rows.slice(-1)[0];
+    const latestYear = latestElement.year;
+    const rowsWithLatestYearFiltered = rows.filter((element: BusTypeObject) => element.year === latestYear && element.number_of_buses !== "-");
+    const busTypeStringArray = rowsWithLatestYearFiltered.map((element: BusTypeObject) => {
+        const busType = replaceUnderscoresAndCapitalise(element.bus_type);
+        const busSubType = replaceUnderscoresAndCapitalise(element.drive_train_type).replace("nrm", "New Routemaster");
+        const numberBuses = Number(element.number_of_buses.split(",").join(""));
+        const busCountString = numberBuses === 1 ? "1 bus" : `${numberBuses.toString()} buses`;
+        return `${busType} - ${busSubType} - ${busCountString}`;
+    });
+    return busTypeStringArray;
 }
