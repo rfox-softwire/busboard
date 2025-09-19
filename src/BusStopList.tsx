@@ -1,4 +1,4 @@
-import { type ProcessedBusStopData } from "../types/ProcessedBusStopData.ts"
+import { type ProcessedBusStopData } from "../types/ProcessedBusStopData.ts";
 
 interface propsType {
     stopCodeList: ProcessedBusStopData[],
@@ -6,33 +6,36 @@ interface propsType {
 }
 
 function BusStopList({ stopCodeList, onSelection }: propsType) {
-    const noStopsFound: boolean = stopCodeList[0].id === null
+    const noStopsFound: boolean = stopCodeList.length === 0;
     return (
-        <div>
-            {noStopsFound && <p>No stops found - please enter valid postcode</p>}
-            {!noStopsFound &&
-                <div>
-                    <p>Nearest bus stops - please select:</p>
+        <section className="pt-2">
+            {noStopsFound && <p className="text-red-500 pt-2">No stops found - please enter valid postcode</p>}
+            {!noStopsFound && 
+                <section>
+                    <h3 className="font-bold">Nearest bus stops - please select:</h3>
+                    <ol>
                     {stopCodeList.map((busStop: ProcessedBusStopData, index: number) => {
                         return (
-                            <div key={"stop-"+index.toString()}>
-                                <label>
+                            <li key={"stop-"+index.toString()}>
+                                <label className="inline">
                                     <input
                                         type="radio"
                                         name="busStops"
+                                        className="mx-1"
                                         value={busStop.id ?? undefined}
                                         onChange = {onSelection}
                                     />
                                     {busStop.name}
                                 </label>
-                            </div>
-                        )
+                            </li>
+                        );
                     })
                     }
-                </div>
+                    </ol>
+                </section>
             }
-        </div>
-    )
+        </section>
+    );
 }
 
-export default BusStopList
+export default BusStopList;

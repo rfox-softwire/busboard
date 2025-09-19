@@ -38,6 +38,8 @@ export default tseslint.config(
       ...reactX.configs['recommended-typescript'].rules,
       ...reactDom.configs.recommended.rules,
       'object-curly-spacing': ['error', 'always'],
+      "semi": ["error", "always"],
+      "eol-last": ["error", "always"],
     },
   },
 )
