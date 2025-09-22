@@ -68,7 +68,7 @@ function BusBoardApp() {
     mainTimeout = setTimeout(async () => {
       await getArrivalsData(stopCodeString)
       startTimer(durationInSeconds)
-    }, durationInSeconds*1000)
+    }, durationInSeconds*1000 + 500)
   }
 
   async function getArrivalsButtonClicked() {
@@ -125,10 +125,10 @@ function BusBoardApp() {
 
         {arrivalsData[0] && buttonClicked && <p className="font-bold">Upcoming buses for {stopName}</p>}
         {isLoadingArrivals && <PulseLoader color = "#00ACC1"/>}
-        {!isLoadingArrivals && timeRemaining > 0 && buttonClicked && <UpcomingBuses 
+        {!isLoadingArrivals && buttonClicked && <UpcomingBuses 
           arrivalsData = {arrivalsData}
-          timeRemaining = {timeRemaining}
         />}
+        {buttonClicked && <p className="font-bold mt-1">Bus times will refresh in {timeRemaining} seconds</p>}
       </main>
   );
 }
