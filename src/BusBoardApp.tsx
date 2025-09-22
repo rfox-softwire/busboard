@@ -4,6 +4,7 @@ import { getBusStopsNearPostCode, } from "../backend/fetchBusStops.js";
 import { type ProcessedBusStopData } from "../types/ProcessedBusStopData.ts";
 import BusStopList from "./BusStopList.js"; 
 import UpcomingBuses from "./UpcomingBuses.tsx";
+import { PulseLoader } from "react-spinners";
 
 const initialStopCodeListState = [] as ProcessedBusStopData[];
 
@@ -15,24 +16,31 @@ function BusBoardApp() {
   const [stopCodeList, setStopCodeList] = useState<ProcessedBusStopData[]>(initialStopCodeListState);
   const [timeRemaining, setTimeRemaining] = useState<number>(0)
   const [buttonClicked, setButtonClicked] = useState<boolean>(false)
+  const [isLoadingArrivals, setIsLoadingArrivals] = useState<boolean>(false)
+  const [isLoadingStops, setIsLoadingStops] = useState(false)
 
   async function getArrivalsData(stopCode: string) {
     try {
+      setIsLoadingArrivals(true)
       const response = await getFirstFiveArrivals(stopCode);
       setArrivalsData(response);
     } catch (error) {
       setArrivalsData(["Error: No buses for stop found"]);
+      setIsLoadingArrivals(false)
       throw error;
     }
   }
 
   async function handlePostCodeChange(postCode: string) {
     try {
+      setIsLoadingStops(true)
       setPostCodeString(postCode);
       const stopArray: ProcessedBusStopData[] = await getBusStopsNearPostCode(postCode);
       setStopCodeList(stopArray);
+      setIsLoadingStops(false)
     } catch (error) {
       setStopCodeList(initialStopCodeListState);
+      setIsLoadingStops(false)
       throw error;
     }
   }
@@ -98,10 +106,11 @@ function BusBoardApp() {
           }}
         />
         
-        <BusStopList
+        {isLoadingStops && <PulseLoader color = "#00ACC1"/>}
+        {!isLoadingStops && <BusStopList
           stopCodeList = {stopCodeList}
           onSelection = {handleChangeSelectedStop}
-        />
+        />}
 
         <button
           className="my-3 py-1 px-2 bg-cyan-600 hover:bg-cyan-900 rounded-lg text-white font-bold"
@@ -114,7 +123,8 @@ function BusBoardApp() {
         </button>
 
         {arrivalsData[0] && buttonClicked && <p className="font-bold">Upcoming buses for {stopName}</p>}
-        {timeRemaining > 0 && buttonClicked && <UpcomingBuses 
+        {isLoadingArrivals && <PulseLoader color = "#00ACC1"/>}
+        {!isLoadingArrivals && timeRemaining > 0 && buttonClicked && <UpcomingBuses 
           arrivalsData = {arrivalsData}
           timeRemaining = {timeRemaining}
         />}

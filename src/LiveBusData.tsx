@@ -3,6 +3,7 @@ import { getNumberBusStops, getNumberBusRoutes } from "../backend/tflApiService.
 import { getLatestNumberBusJourneys } from "../backend/fetchNumberBusJourneys.js";
 import { getLatestNumberBusesByType } from "../backend/fetchNumberBusesByType.js";
 import type { BusJourneysData } from "../types/BusJourneysData.js";
+import { PulseLoader } from "react-spinners";
 
 
 function LiveBusData() {
@@ -62,7 +63,7 @@ function LiveBusData() {
         <section>
             <h2 className="text-xl font-bold text-cyan-600 my-2">Live London bus data</h2>
             
-            {dataLoading && <p>Loading - please wait</p>}
+            {dataLoading && <PulseLoader color = "#00ACC1"/>}
             {!dataLoading && <table className="mw-4/5 m-1">
                 <thead className="text-left border-b-2 border-gray-400">
                     <tr>
