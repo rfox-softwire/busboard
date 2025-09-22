@@ -24,6 +24,7 @@ function BusBoardApp() {
       setIsLoadingArrivals(true)
       const response = await getFirstFiveArrivals(stopCode);
       setArrivalsData(response);
+      setIsLoadingArrivals(false)
     } catch (error) {
       setArrivalsData(["Error: No buses for stop found"]);
       setIsLoadingArrivals(false)
