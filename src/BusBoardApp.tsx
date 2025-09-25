@@ -18,6 +18,7 @@ function BusBoardApp() {
   const [buttonClicked, setButtonClicked] = useState<boolean>(false)
   const [isLoadingArrivals, setIsLoadingArrivals] = useState<boolean>(false)
   const [isLoadingStops, setIsLoadingStops] = useState(false)
+  const [mapCoordinates, setMapCoordinates] = useState<[number | null, number | null]>([null,null])
 
   async function getArrivalsData(stopCode: string) {
     try {
@@ -48,44 +49,47 @@ function BusBoardApp() {
 
   function handleChangeSelectedStop(e: ChangeEvent<HTMLInputElement>) {
     setButtonClicked(false)
+    setTimeRemaining(0)
+
     const selectedStop = e.target.value;
     if (selectedStop) {
       setStopCodeString(selectedStop);
       const stopData = stopCodeList.find((element) => element.id === selectedStop)
       const name = stopData?.name
       if (name) setStopName(name)
+      const stopCoordinates = stopData?.coordinates
+      if (stopCoordinates) setMapCoordinates(stopCoordinates)
     }
   }
 
-  let timeTimeout: ReturnType<typeof setTimeout>
-  let mainTimeout: ReturnType<typeof setTimeout>
+  let timeout: ReturnType<typeof setTimeout>
 
   function startTimer(durationInSeconds: number) {
-    if (mainTimeout) clearTimeout(mainTimeout)
-    if (timeTimeout) clearTimeout(timeTimeout)
-    
     setTimeRemaining(durationInSeconds)
-    mainTimeout = setTimeout(async () => {
-      await getArrivalsData(stopCodeString)
-      startTimer(durationInSeconds)
-    }, durationInSeconds*1000 + 500)
   }
 
-  async function getArrivalsButtonClicked() {
-    if (mainTimeout) clearTimeout(mainTimeout)
-    if (timeTimeout) clearTimeout(timeTimeout)
-    
+  useEffect(() => {
+    if (buttonClicked) {
+      timeout = setTimeout(() => {
+        if (timeRemaining > 0) {
+          setTimeRemaining(timeRemaining - 1)
+        } else {
+          (async () => {
+            await getArrivalsData(stopCodeString)
+          })()
+          startTimer(5)
+        }
+      }, 1000)
+    }
+    return () => clearTimeout(timeout)
+  }, [timeRemaining])
+
+
+  async function getArrivalsButtonClicked() {    
     setButtonClicked(true)
     await getArrivalsData(stopCodeString);
     startTimer(5)
   }
-
-  useEffect(() => {
-    if (timeRemaining > 0) {
-      if (timeTimeout) clearTimeout(timeTimeout)
-      timeTimeout = setTimeout(() => setTimeRemaining(timeRemaining-1), 1000)
-    }
-  }, [timeRemaining])
     
   return (
       <main className="mx-2">
@@ -111,6 +115,7 @@ function BusBoardApp() {
         {!isLoadingStops && <BusStopList
           stopCodeList = {stopCodeList}
           onSelection = {handleChangeSelectedStop}
+          mapCoordinates={mapCoordinates}
         />}
 
         <button

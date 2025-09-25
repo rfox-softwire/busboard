@@ -11,11 +11,12 @@ export async function getBusStopsNearPostCode(postCode: string): Promise<Process
     const { longitude, latitude }: CoordinateData = await getCoordinatesFromPostCode(postCode);
     const data = await getStopsDataFromCoordinates(longitude,latitude);
     const nearestTwoStops = data.slice(0,2);
-    const busStopArray = nearestTwoStops.map((busStop: UnprocessedBusStopData) => {
-        const { naptanId, commonName } = busStop;
+    const busStopArray: ProcessedBusStopData[] = nearestTwoStops.map((busStop: UnprocessedBusStopData) => {
+        const { naptanId, commonName, lat, lon } = busStop;
         return {
             id: naptanId,
-            name: commonName
+            name: commonName,
+            coordinates: [lat,lon]
         };
     });
     return busStopArray;
