@@ -1,4 +1,4 @@
-function UpcomingBuses({arrivalsData}: {arrivalsData: string[]}) {
+function UpcomingBuses({ arrivalsData }: {arrivalsData: string[]}) {
     return (
         <section>
             <ol className="list-decimal ml-5 flex-1">
@@ -8,7 +8,7 @@ function UpcomingBuses({arrivalsData}: {arrivalsData: string[]}) {
             </ol>
             
         </section>
-    )
+    );
 }
 
-export default UpcomingBuses
+export default UpcomingBuses;

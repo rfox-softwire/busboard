@@ -5,7 +5,7 @@ import {
   TileLayer,
   useMap,
   Marker
-} from 'react-leaflet'
+} from 'react-leaflet';
 
 interface propsType {
     stopCodeList: ProcessedBusStopData[],
@@ -16,13 +16,13 @@ interface propsType {
 function BusStopList({ stopCodeList, onSelection, mapCoordinates }: propsType) {
     const noStopsFound: boolean = stopCodeList.length === 0;
 
-    const RecentreAutomatically = ({coordinates} : {coordinates: [number,number]}) => {
-        const map = useMap()
+    const RecentreAutomatically = ({ coordinates } : {coordinates: [number,number]}) => {
+        const map = useMap();
         useEffect(() => {
-            map.setView(coordinates)
-        }, [coordinates])
-        return null
-    }
+            map.setView(coordinates);
+        }, [coordinates]);
+        return null;
+    };
 
     return (
         <section className="pt-2">

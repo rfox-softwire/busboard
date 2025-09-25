@@ -14,81 +14,76 @@ function BusBoardApp() {
   const [stopCodeString, setStopCodeString] = useState<string>("");
   const [stopName, setStopName] = useState<string>("");
   const [stopCodeList, setStopCodeList] = useState<ProcessedBusStopData[]>(initialStopCodeListState);
-  const [timeRemaining, setTimeRemaining] = useState<number>(0)
-  const [buttonClicked, setButtonClicked] = useState<boolean>(false)
-  const [isLoadingArrivals, setIsLoadingArrivals] = useState<boolean>(false)
-  const [isLoadingStops, setIsLoadingStops] = useState(false)
-  const [mapCoordinates, setMapCoordinates] = useState<[number | null, number | null]>([null,null])
+  const [timeRemaining, setTimeRemaining] = useState<number>(0);
+  const [buttonClicked, setButtonClicked] = useState<boolean>(false);
+  const [isLoadingArrivals, setIsLoadingArrivals] = useState<boolean>(false);
+  const [isLoadingStops, setIsLoadingStops] = useState(false);
+  const [mapCoordinates, setMapCoordinates] = useState<[number | null, number | null]>([null,null]);
 
   async function getArrivalsData(stopCode: string) {
     try {
-      setIsLoadingArrivals(true)
+      setIsLoadingArrivals(true);
       const response = await getFirstFiveArrivals(stopCode);
       setArrivalsData(response);
-      setIsLoadingArrivals(false)
+      setIsLoadingArrivals(false);
     } catch (error) {
       setArrivalsData(["Error: No buses for stop found"]);
-      setIsLoadingArrivals(false)
+      setIsLoadingArrivals(false);
       throw error;
     }
   }
 
   async function handlePostCodeChange(postCode: string) {
     try {
-      setIsLoadingStops(true)
+      setIsLoadingStops(true);
       setPostCodeString(postCode);
       const stopArray: ProcessedBusStopData[] = await getBusStopsNearPostCode(postCode);
       setStopCodeList(stopArray);
-      setIsLoadingStops(false)
+      setIsLoadingStops(false);
     } catch (error) {
       setStopCodeList(initialStopCodeListState);
-      setIsLoadingStops(false)
+      setIsLoadingStops(false);
       throw error;
     }
   }
 
   function handleChangeSelectedStop(e: ChangeEvent<HTMLInputElement>) {
-    setButtonClicked(false)
-    setTimeRemaining(0)
+    setButtonClicked(false);
+    setTimeRemaining(0);
 
     const selectedStop = e.target.value;
     if (selectedStop) {
       setStopCodeString(selectedStop);
-      const stopData = stopCodeList.find((element) => element.id === selectedStop)
-      const name = stopData?.name
-      if (name) setStopName(name)
-      const stopCoordinates = stopData?.coordinates
-      if (stopCoordinates) setMapCoordinates(stopCoordinates)
+      const stopData = stopCodeList.find((element) => element.id === selectedStop);
+      const name = stopData?.name;
+      if (name) setStopName(name);
+      const stopCoordinates = stopData?.coordinates;
+      if (stopCoordinates) setMapCoordinates(stopCoordinates);
     }
   }
 
-  let timeout: ReturnType<typeof setTimeout>
-
-  function startTimer(durationInSeconds: number) {
-    setTimeRemaining(durationInSeconds)
-  }
+  let timeout: ReturnType<typeof setTimeout>;
 
   useEffect(() => {
     if (buttonClicked) {
       timeout = setTimeout(() => {
         if (timeRemaining > 0) {
-          setTimeRemaining(timeRemaining - 1)
+          setTimeRemaining(timeRemaining - 1);
         } else {
-          (async () => {
-            await getArrivalsData(stopCodeString)
-          })()
-          startTimer(5)
+          void (async () => {
+            await getArrivalsData(stopCodeString);
+          })();
+          setTimeRemaining(5);
         }
-      }, 1000)
+      }, 1000);
     }
-    return () => clearTimeout(timeout)
-  }, [timeRemaining])
-
+    return () => { clearTimeout(timeout); };
+  }, [timeRemaining]);
 
   async function getArrivalsButtonClicked() {    
-    setButtonClicked(true)
+    setButtonClicked(true);
     await getArrivalsData(stopCodeString);
-    startTimer(5)
+    setTimeRemaining(5);
   }
     
   return (
@@ -122,7 +117,7 @@ function BusBoardApp() {
           className="my-3 py-1 px-2 bg-cyan-600 hover:bg-cyan-900 rounded-lg text-white font-bold"
           onClick = {() => {
             void (async () => {
-              await getArrivalsButtonClicked()
+              await getArrivalsButtonClicked();
             })();
           }}
           type = "button">Click to get arrivals
